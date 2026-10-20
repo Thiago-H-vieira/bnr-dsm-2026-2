@@ -77,15 +77,7 @@ public class CursoController {
    @DeleteMapping("/{id}")
    public ResponseEntity<Void> excluir(@PathVariable String id) {
 
-
-       if (service.buscarPorId(id).isEmpty()) {
-           return ResponseEntity.notFound().build();
-       }
-
-
        service.excluir(id);
-
-
        return ResponseEntity.noContent().build();
    }
 
