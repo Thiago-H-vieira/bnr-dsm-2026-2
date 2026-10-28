@@ -1,8 +1,14 @@
 package br.edu.fatecfranca.api.models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Nota {
     
+    @NotBlank(message = "A avaliação é obrigatória.")
     private String avaliacao;
+
+    @NotNull(message = "O valor é obrigatório.")
     private Double valor;
 
     public Nota() {

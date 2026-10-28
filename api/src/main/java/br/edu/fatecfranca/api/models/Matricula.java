@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 @Document(collection = "matriculas")
 
 public class Matricula {
@@ -13,6 +16,12 @@ public class Matricula {
     private String id;
     private String alunoId;
     private String turmaId;
+
+    @NotBlank(message = "O status é obrigatório.")
+    @Pattern(
+       regexp = "PREVISTA|ATIVA|ENCERRADA|CANCELADA",
+       message = "O status deve ser PREVISTA, ATIVA, ENCERRADA ou CANCELADA."
+   )
     private String status;
 
     private List<Nota> notas;

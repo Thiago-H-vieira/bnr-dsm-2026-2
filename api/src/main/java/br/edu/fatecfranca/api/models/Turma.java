@@ -1,9 +1,19 @@
 package br.edu.fatecfranca.api.models;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Document(collection = "turmas")
 
@@ -11,12 +21,24 @@ public class Turma {
     
     @Id
     private String id;
-
     private String cursoId;
     private String instrutorId;
-    private String inicio;
-    private String fim;
-    private Double vagas;
+
+    @NotNull(message = "A data inicial é obrigatória.")
+    private LocalDate inicio;
+
+    @NotNull(message = "A data final é obrigatória.")
+    private LocalDate fim;
+
+    @NotNull(message = "O número de vagas é obrigatório.")
+    @Positive(message = "O número de vagas deve ser maior que zero.")
+    private Integer vagas;
+
+    @NotBlank(message = "O status é obrigatório.")
+    @Pattern(
+       regexp = "PREVISTA|ATIVA|ENCERRADA|CANCELADA",
+       message = "O status deve ser PREVISTA, ATIVA, ENCERRADA ou CANCELADA."
+   )
     private String status;
 
     private List<Horario> horarios;
@@ -25,7 +47,7 @@ public class Turma {
 
     }
 
-    public Turma(String id, String cursoId, String instrutorId, String inicio, String fim, Double vagas,
+    public Turma(String id, String cursoId, String instrutorId, LocalDate inicio, LocalDate fim, Integer vagas,
             String status, List<Horario> horarios) {
         this.id = id;
         this.cursoId = cursoId;
@@ -36,6 +58,20 @@ public class Turma {
         this.status = status;
         this.horarios = horarios;
     }
+
+    // Como essa validação envolve a comparação entre dois atributos, foi
+   // necessário escrever uma função específica de validação
+   @JsonIgnore
+   @AssertTrue(message = "A data final não pode ser anterior à data inicial.")
+   public boolean isPeriodoValido() {
+       if (inicio == null || fim == null) {
+           return true;
+       }
+
+
+       return !fim.isBefore(inicio);
+   }
+
 
     public String getId() {
         return id;
@@ -61,27 +97,27 @@ public class Turma {
         this.instrutorId = instrutorId;
     }
 
-    public String getinicio() {
+    public LocalDate getInicio() {
         return inicio;
     }
 
-    public void setDataInicio(String inicio) {
+    public void setInicio(LocalDate inicio) {
         this.inicio = inicio;
     }
 
-    public String getfim() {
+    public LocalDate getFim() {
         return fim;
     }
 
-    public void setfim(String fim) {
+    public void setFim(LocalDate fim) {
         this.fim = fim;
     }
 
-    public Double getvagas() {
+    public Integer getVagas() {
         return vagas;
     }
 
-    public void setvagas(Double vagas) {
+    public void setVagas(Integer vagas) {
         this.vagas = vagas;
     }
 

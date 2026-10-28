@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 @Document(collection = "cursos")
 
 public class Curso {
@@ -12,8 +16,14 @@ public class Curso {
     @Id
    private String id;
 
+   @NotBlank(message = "O nome é obrigatório.")
    private String nome;
+
+   @NotBlank(message = "A carga horária é obrigatória.")
    private String cargaHoraria;
+   
+   @NotNull(message = "O valor é obrigatório.")
+   @Positive(message = "O valor deve ser maior que zero.")
    private Double valor;
 
     private List<Modulo> modulos;

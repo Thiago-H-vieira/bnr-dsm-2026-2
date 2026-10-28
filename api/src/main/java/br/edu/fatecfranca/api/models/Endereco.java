@@ -1,14 +1,25 @@
 package br.edu.fatecfranca.api.models;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Endereco {
 
-   private String logradouro;
-   private String numero;
-   private String municipio;
-   private String uf;
-   private String cep;
+    @NotBlank(message = "O logradouro é obrigatório.")
+    private String logradouro;
 
-   public Endereco() {
+    @NotBlank(message = "O número é obrigatório.")
+    private String numero;
+
+    @NotBlank(message = "O município é obrigatório.")
+    private String municipio;
+
+    @NotBlank(message = "A uf é obrigatória.")
+    private String uf;
+
+    @NotBlank(message = "O CEP é obrigatório.")
+    private String cep;
+
+    public Endereco() {
 
    }
 

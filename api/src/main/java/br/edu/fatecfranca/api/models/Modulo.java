@@ -1,9 +1,17 @@
 package br.edu.fatecfranca.api.models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Modulo {
     
+    @NotBlank(message = "O título é obrigatório.")
     private String titulo;
+
+    @NotBlank(message = "O conteúdo é obrigatório.")
     private String conteudo;
+
+    @NotNull(message = "A carga horária é obrigatória.")
     private String cargaHoraria;
 
     public Modulo() {

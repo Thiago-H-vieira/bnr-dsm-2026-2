@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.edu.fatecfranca.api.dtos.MatriculaResponse;
 import br.edu.fatecfranca.api.models.Matricula;
+import br.edu.fatecfranca.api.models.Turma;
+import br.edu.fatecfranca.api.models.Aluno;
 import br.edu.fatecfranca.api.repositories.AlunoRepository;
 import br.edu.fatecfranca.api.repositories.TurmaRepository;
 import br.edu.fatecfranca.api.repositories.MatriculaRepository;
@@ -26,6 +29,50 @@ public class MatriculaService {
    }
 
    
+   // Este método monta uma resposta para o GET de /turmas
+   // incluindo os dados de curso e instrutor
+   private MatriculaResponse montarResposta(Matricula matricula) {
+       Aluno aluno = alunoRepository.findById(matricula.getAlunoId())
+               .orElse(null);
+
+
+       Turma turma = matricula.getTurmaId() == null
+               || matricula.getTurmaId().isBlank()
+               ? null
+               : turmaRepository.findById(matricula.getTurmaId())
+                       .orElse(null);
+
+
+       return new MatriculaResponse(
+               matricula.getId(),
+               matricula.getAlunoId(),
+               matricula.getTurmaId(),
+               matricula.getNotas(),
+               aluno,
+               turma);
+   }
+
+
+   public List<MatriculaResponse> listarComDetalhes() {
+       return repository.findAll().stream()
+               .map(this::montarResposta)
+               .toList();
+   }
+
+
+   public Optional<MatriculaResponse> buscarComDetalhes(String id) {
+       return repository.findById(id)
+               .map(this::montarResposta);
+   }
+
+
+   public List<MatriculaResponse> listarPorAlunoComDetalhes(String alunoId) {
+       return listarPorAluno(alunoId).stream()
+               .map(this::montarResposta)
+               .toList();
+   }
+
+
 private void verificarAluno(String alunoId) {
        if (alunoId == null || alunoId.isBlank()) {
            throw new ResponseStatusException(
